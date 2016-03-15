@@ -178,22 +178,27 @@ void loop() {
               if (buffIdx != 255) // finish the partial block write
                 writeFlash(byteCount + 5 - (buffIdx + 1), loadBuffer,
                            buffIdx + 1);
-
               delayMicroseconds(50); // these are necciary to get reliable writes
+              
               uint32_t size = byteCount + 5;
               for (uint8_t k = 0; k < 4; k++) {
                 writeByteFlash(k + 1, (size >> (k * 8)) & 0xFF); // write the size of the config data to the flash
                 delayMicroseconds(50);
               }
-              delayMicroseconds(50);
+              
               writeByteFlash(0, 0xAA); // 0xAA is used to signal the flash has valid data
+              delayMicroseconds(50);
+
               Serial.write('D'); // signal we are done
               //Serial.flush(); // make sure it sends
+
               if (verify) {
                 state = VERIFY_FLASH;
+                
               }
               else {
                 state = LOAD_FROM_FLASH;
+
               }
             }
             break;
@@ -223,14 +228,20 @@ void loop() {
                 }
                 readFlash(loadBuffer, k, s); // read blocks of 256
                 uint16_t br = Serial.write((uint8_t*) loadBuffer, s); // dump them to the serial port
-                k -= (256 - br); // if all the bytes weren't sent, resend them next round
+                //k -= (256 - br); // if all the bytes weren't sent, resend them next round
                 //Serial.flush();
-                delay(10); // needed to prevent errors in some computers running Windows (give it time to process the data?)
+                //delay(10); // needed to prevent errors in some computers running Windows (give it time to process the data?)
+                setRGB(0,255,0);
+                delay(5);
+                setRGB(0,0,0);
+                delay(5);
               }
+              
               state = LOAD_FROM_FLASH;
             }
             break;
           case LOAD_FROM_FLASH:
+            
             if (bt == 'L') {
               loadFromFlash(); // load 'er up!
               Serial.write('D'); // loading done
