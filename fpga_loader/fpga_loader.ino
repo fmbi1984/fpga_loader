@@ -231,10 +231,10 @@ void loop() {
                 //k -= (256 - br); // if all the bytes weren't sent, resend them next round
                 //Serial.flush();
                 //delay(10); // needed to prevent errors in some computers running Windows (give it time to process the data?)
-                setRGB(0,255,0);
-                delay(5);
-                setRGB(0,0,0);
-                delay(5);
+                //setRGB(0,255,0);
+                //delay(5);
+                //setRGB(0,0,0);
+                //delay(5);
               }
               
               state = LOAD_FROM_FLASH;
